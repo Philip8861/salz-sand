@@ -221,12 +221,21 @@ router.get('/me', authenticate, async (req: AuthRequest, res) => {
     
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
-      include: { gameData: true },
       select: {
         id: true,
         username: true,
         email: true,
-        gameData: true,
+        gameData: {
+          select: {
+            id: true,
+            level: true,
+            experience: true,
+            coins: true,
+            salt: true,
+            sand: true,
+            lastAction: true,
+          }
+        },
         createdAt: true,
       }
     });
