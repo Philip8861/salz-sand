@@ -117,3 +117,71 @@
   text-align: center;
   margin-bottom: 20px;
 }
+
+/* Mobile Optimierungen */
+@media (max-width: 768px) {
+  .auth-container {
+    /* background-attachment: fixed funktioniert auf Mobile nicht gut (Performance) */
+    background-attachment: scroll;
+    /* Bessere Positionierung für Mobile */
+    background-position: center top;
+    padding: 10px;
+  }
+
+  /* Overlay auf Mobile etwas dunkler für bessere Lesbarkeit */
+  .auth-container::before {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .auth-card {
+    padding: 30px 20px;
+    max-width: 100%;
+    margin: 0 10px;
+  }
+
+  .auth-card h1 {
+    font-size: 28px;
+  }
+
+  .auth-card h2 {
+    font-size: 20px;
+  }
+
+  .auth-card input,
+  .auth-card button {
+    font-size: 16px; /* Verhindert Zoom auf iOS */
+  }
+}
+
+/* Sehr kleine Screens (Smartphones im Portrait) */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 5px;
+  }
+
+  .auth-card {
+    padding: 25px 15px;
+    border-radius: 8px;
+  }
+
+  .auth-card h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+  }
+
+  .auth-card h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .auth-card form {
+    gap: 12px;
+  }
+}
+
+/* Landscape Mobile (Tablets im Querformat) */
+@media (max-width: 1024px) and (orientation: landscape) {
+  .auth-container {
+    background-position: center center;
+  }
+}
