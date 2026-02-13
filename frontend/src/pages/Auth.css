@@ -43,13 +43,14 @@
 }
 
 .auth-card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(15px);
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 400px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .auth-card h1 {
@@ -140,7 +141,12 @@
 
   /* Overlay auf Mobile etwas dunkler für bessere Lesbarkeit */
   .auth-container::before {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.35);
+  }
+  
+  /* Auth-Card auf Mobile etwas undurchsichtiger für bessere Lesbarkeit */
+  .auth-card {
+    background: rgba(255, 255, 255, 0.85);
   }
 
   .auth-card {
