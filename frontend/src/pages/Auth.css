@@ -25,7 +25,7 @@
   }
 }
 
-/* Overlay für bessere Lesbarkeit (reduziert für mehr Sichtbarkeit) */
+/* Overlay für bessere Lesbarkeit (sehr reduziert für maximale Sichtbarkeit) */
 .auth-container::before {
   content: '';
   position: absolute;
@@ -33,7 +33,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.15);
   z-index: 0;
 }
 
@@ -43,14 +43,14 @@
 }
 
 .auth-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 400px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .auth-card h1 {
@@ -141,12 +141,12 @@
 
   /* Overlay auf Mobile etwas dunkler für bessere Lesbarkeit */
   .auth-container::before {
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.25);
   }
   
   /* Auth-Card auf Mobile etwas undurchsichtiger für bessere Lesbarkeit */
   .auth-card {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.65);
   }
 
   .auth-card {
