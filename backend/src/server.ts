@@ -78,6 +78,18 @@ app.use('/api/', rateLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/game', gameRoutes);
 
+// Root Route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Salz&Sand Backend API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      api: '/api'
+    }
+  });
+});
+
 // Health Check (ohne Rate Limiting)
 app.get('/health', (req, res) => {
   res.json({
