@@ -58,6 +58,7 @@
   color: #667eea;
   margin-bottom: 10px;
   font-size: 32px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .auth-card h2 {
