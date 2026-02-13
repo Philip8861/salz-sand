@@ -11,5 +11,22 @@ export default defineConfig({
         changeOrigin: true,
       }
     }
-  }
+  },
+  build: {
+    // Performance-Warnungen bei großen Bundles
+    chunkSizeWarningLimit: 500, // KB
+    rollupOptions: {
+      output: {
+        // Code Splitting für bessere Performance
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'axios-vendor': ['axios'],
+        },
+      },
+    },
+  },
+  // Performance-Optimierungen
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'axios'],
+  },
 });

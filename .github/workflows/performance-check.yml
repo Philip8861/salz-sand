@@ -1,0 +1,44 @@
+name: Performance Check
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  performance-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies
+        run: |
+          cd frontend && npm install
+      
+      - name: Build frontend
+        run: |
+          cd frontend && npm run build
+      
+      - name: Check asset sizes
+        run: |
+          cd frontend && npm run check-assets
+      
+      - name: Check bundle size
+        run: |
+          cd frontend
+          BUNDLE_SIZE=$(du -sk dist | cut -f1)
+          if [ "$BUNDLE_SIZE" -gt 2048 ]; then
+            echo "❌ Bundle zu groß: ${BUNDLE_SIZE}KB (Limit: 2048KB)"
+            exit 1
+          else
+            echo "✅ Bundle-Größe OK: ${BUNDLE_SIZE}KB"
+          fi
