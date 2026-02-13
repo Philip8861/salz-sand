@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
 import { registerSchema, loginSchema } from '../utils/validation';
-import { authenticate } from '../middleware/auth';
+import { authenticate, AuthRequest } from '../middleware/auth';
 import rateLimit from 'express-rate-limit';
 
 const router = express.Router();
@@ -213,8 +213,12 @@ router.post('/login', loginLimiter, async (req, res) => {
 });
 
 // Get Current User
-router.get('/me', authenticate, async (req: any, res) => {
+router.get('/me', authenticate, async (req: AuthRequest, res) => {
   try {
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Nicht authentifiziert' });
+    }
+    
     const user = await prisma.user.findUnique({
       where: { id: req.userId },
       include: { gameData: true },

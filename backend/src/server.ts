@@ -57,14 +57,6 @@ app.use(cors({
 // Body Parser mit Limits
 app.use(express.json({
   limit: '10kb', // Kleine Limits gegen DoS
-  verify: (req: any, res, buf) => {
-    try {
-      JSON.parse(buf.toString());
-    } catch (e) {
-      res.status(400).json({ error: 'Ungültiges JSON' });
-      throw new Error('Invalid JSON');
-    }
-  }
 }));
 
 app.use(express.urlencoded({
