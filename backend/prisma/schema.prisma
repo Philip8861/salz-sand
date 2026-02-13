@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  gameData  GameData?
+  actions   GameAction[]
+  
+  @@index([email])
+  @@index([username])
+  @@map("users")
+}
+
+model GameData {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  level     Int      @default(1)
+  experience Int     @default(0)
+  coins     Int      @default(100)
+  salt      Int      @default(0)
+  sand      Int      @default(0)
+  
+  lastAction DateTime @default(now())
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([userId])
+  @@map("game_data")
+}
+
+model GameAction {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  actionType String
+  data      Json?
+  timestamp DateTime @default(now())
+  
+  @@index([userId, timestamp])
+  @@index([actionType, timestamp])
+  @@map("game_actions")
+}
