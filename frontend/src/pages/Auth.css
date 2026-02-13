@@ -43,14 +43,14 @@
 }
 
 .auth-card {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(25px);
+  background: transparent;
+  backdrop-filter: none;
   padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  border-radius: 0;
+  box-shadow: none;
   width: 100%;
   max-width: 400px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: none;
 }
 
 .auth-card h1 {
@@ -77,17 +77,19 @@
 
 .auth-card input {
   padding: 12px;
-  border: 2px solid rgba(224, 224, 224, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.6);
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 0.3s;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .auth-card input:focus {
   outline: none;
   border-color: #667eea;
+  box-shadow: 0 2px 12px rgba(102, 126, 234, 0.3);
 }
 
 .auth-card button {
@@ -99,11 +101,14 @@
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .auth-card button:hover:not(:disabled) {
   background: #5568d3;
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.5);
+  transform: translateY(-1px);
 }
 
 .auth-card button:disabled {
@@ -129,12 +134,14 @@
 }
 
 .error {
-  background: #fee;
+  background: rgba(255, 238, 238, 0.95);
   color: #c33;
   padding: 12px;
   border-radius: 8px;
   text-align: center;
   margin-bottom: 20px;
+  border: 1px solid rgba(204, 51, 51, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Mobile Optimierungen */
@@ -149,15 +156,11 @@
     background: rgba(0, 0, 0, 0.2);
   }
   
-  /* Auth-Card auf Mobile etwas undurchsichtiger für bessere Lesbarkeit */
-  .auth-card {
-    background: rgba(255, 255, 255, 0.4);
-  }
-
   .auth-card {
     padding: 30px 20px;
     max-width: 100%;
     margin: 0 10px;
+    background: transparent;
   }
 
   .auth-card h1 {
