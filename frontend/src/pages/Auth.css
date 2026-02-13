@@ -4,12 +4,25 @@
   align-items: center;
   min-height: 100vh;
   padding: 20px;
+  /* Desktop-Bild (Standard) */
   background-image: url('/login-background.jpg.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
   position: relative;
+}
+
+/* Mobile-Bild für Smartphones */
+@media (max-width: 768px) {
+  .auth-container {
+    /* Mobile-optimiertes Bild verwenden */
+    background-image: url('/login-background-mobile.webp');
+    /* background-attachment: fixed funktioniert auf Mobile nicht gut (Performance) */
+    background-attachment: scroll;
+    /* Bessere Positionierung für Mobile */
+    background-position: center top;
+  }
 }
 
 /* Overlay für bessere Lesbarkeit */
@@ -121,10 +134,7 @@
 /* Mobile Optimierungen */
 @media (max-width: 768px) {
   .auth-container {
-    /* background-attachment: fixed funktioniert auf Mobile nicht gut (Performance) */
-    background-attachment: scroll;
-    /* Bessere Positionierung für Mobile */
-    background-position: center top;
+    /* background-attachment wird bereits oben gesetzt */
     padding: 10px;
   }
 
