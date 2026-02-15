@@ -96,15 +96,6 @@ router.post('/register', registerLimiter, async (req, res) => {
           username,
           email,
           password: hashedPassword,
-          gameData: {
-            create: {
-              level: 1,
-              experience: 0,
-              coins: 100,
-              salt: 0,
-              sand: 0,
-            }
-          }
         },
         select: {
           id: true,

@@ -139,39 +139,42 @@ router.post('/action', strictRateLimiter, async (req: AuthRequest, res) => {
     };
 
     switch (actionType) {
-      case 'collect_salt':
+      case 'collect_salt': {
         // Maximal 1 Salz pro Aktion, multipliziert mit Spielgeschwindigkeit
-        const saltAmount = Math.floor(1 * gameSpeed);
-        updatedData.salt += saltAmount;
+        const collectSaltAmount = Math.floor(1 * gameSpeed);
+        updatedData.salt += collectSaltAmount;
         updatedData.experience += Math.floor(5 * gameSpeed);
         break;
+      }
 
-      case 'collect_sand':
+      case 'collect_sand': {
         // Maximal 1 Sand pro Aktion, multipliziert mit Spielgeschwindigkeit
-        const sandAmount = Math.floor(1 * gameSpeed);
-        updatedData.sand += sandAmount;
+        const collectSandAmount = Math.floor(1 * gameSpeed);
+        updatedData.sand += collectSandAmount;
         updatedData.experience += Math.floor(5 * gameSpeed);
         break;
+      }
 
-      case 'sell_resources':
+      case 'sell_resources': {
         // Validierung der Mengen
-        const saltAmount = validateResourceAmount(data?.salt || 0, gameData.salt);
-        const sandAmount = validateResourceAmount(data?.sand || 0, gameData.sand);
+        const sellSaltAmount = validateResourceAmount(data?.salt || 0, gameData.salt);
+        const sellSandAmount = validateResourceAmount(data?.sand || 0, gameData.sand);
 
-        if (saltAmount === 0 && sandAmount === 0) {
+        if (sellSaltAmount === 0 && sellSandAmount === 0) {
           return res.status(400).json({ error: 'Keine Ressourcen zum Verkaufen' });
         }
 
         // Preise serverseitig berechnen (kann nicht manipuliert werden)
         const saltPrice = 10;
         const sandPrice = 5;
-        const totalCoins = (saltAmount * saltPrice) + (sandAmount * sandPrice);
+        const totalCoins = (sellSaltAmount * saltPrice) + (sellSandAmount * sandPrice);
 
         updatedData.coins += totalCoins;
-        updatedData.salt -= saltAmount;
-        updatedData.sand -= sandAmount;
-        updatedData.experience += Math.floor((saltAmount + sandAmount) * 2);
+        updatedData.salt -= sellSaltAmount;
+        updatedData.sand -= sellSandAmount;
+        updatedData.experience += Math.floor((sellSaltAmount + sellSandAmount) * 2);
         break;
+      }
 
       default:
         return res.status(400).json({ error: 'Ungültige Aktion' });
