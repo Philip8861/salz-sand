@@ -1,0 +1,8 @@
+../backend
+../*.md
+../*.bat
+../*.ps1
+../package-lock.json
+node_modules
+.env
+.env.local
