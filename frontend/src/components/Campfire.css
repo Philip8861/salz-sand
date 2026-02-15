@@ -1,0 +1,33 @@
+.campfire-container {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  pointer-events: none;
+  width: auto;
+  height: auto;
+  padding-bottom: 10px;
+}
+
+.campfire-image {
+  width: 200px;
+  height: auto;
+  max-width: 300px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(255, 140, 0, 0.5));
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .campfire-image {
+    width: 150px;
+    max-width: 200px;
+  }
+  
+  .campfire-container {
+    bottom: 0;
+    padding-bottom: 5px;
+  }
+}

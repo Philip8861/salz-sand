@@ -1,0 +1,114 @@
+.sea-glitter-container {
+  position: fixed !important;
+  /* Größen werden per JavaScript gesetzt - füllt gesamten Viewport */
+  left: 0 !important;
+  top: 0 !important;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  /* Rahmen und Hintergrund entfernt */
+  border: none;
+  background: transparent;
+  /* Fixiert beim Scrollen - bleibt immer an derselben Position */
+  will-change: transform;
+  /* Verhindert Änderung beim Zoom - Größe bleibt absolut fest */
+  transform: translateZ(0);
+  /* Verhindert Änderung durch Parent-Container */
+  contain: layout style paint;
+}
+
+.glitter-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 4px rgba(255, 255, 255, 0.9),
+    0 0 8px rgba(255, 255, 255, 0.6),
+    0 0 12px rgba(200, 220, 255, 0.4);
+  opacity: 0;
+  animation: glitterFade 2s ease-in-out infinite;
+  transform: translate(-50%, -50%);
+}
+
+/* Fade In/Out Glitzern - erscheint und verschwindet langsam */
+@keyframes glitterFade {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  15% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  30% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  40% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  70% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  85% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+}
+
+/* Zweiter Kasten unterhalb mit grüner Linie */
+.sea-glitter-container-bottom {
+  position: fixed !important;
+  /* Größen werden per JavaScript gesetzt (relativ zum Hintergrundbild) */
+  left: 0 !important;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  /* Grüne Linie */
+  border: 2px solid green;
+  background: rgba(0, 255, 0, 0.1);
+  /* Fixiert beim Scrollen - bleibt immer an derselben Position */
+  will-change: transform;
+  /* Verhindert Änderung beim Zoom - Größe bleibt absolut fest */
+  transform: translateZ(0);
+  /* Position relativ zum Viewport (bleibt beim Scrollen fest) */
+  top: auto !important;
+  right: auto !important;
+  /* Verhindert Änderung durch Parent-Container */
+  contain: layout style paint;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sea-glitter-container {
+    /* Auf Mobile: 50vw (passt sich an Bildschirmbreite an) */
+    width: calc(50vw - 4vw);
+  }
+  
+  .glitter-particle {
+    width: 2px;
+    height: 2px;
+    opacity: 0.7;
+  }
+  
+  .sea-glitter-container-bottom {
+    /* Auf Mobile: 50vw minus 4vw (passt sich an Bildschirmbreite an) */
+    width: calc(50vw - 4vw);
+  }
+}

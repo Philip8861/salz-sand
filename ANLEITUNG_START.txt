@@ -1,0 +1,66 @@
+========================================
+  SALZ&SAND - SERVER STARTEN
+========================================
+
+OPTION 1: Mit Batch-Datei (EINFACHSTE METHODE)
+------------------------------------------------
+1. Doppelklicke auf: start-all.bat
+2. Warte 20 Sekunden
+3. Oeffne Browser: http://localhost:5173/login
+
+
+OPTION 2: Manuell (wenn Batch-Datei nicht funktioniert)
+--------------------------------------------------------
+SCHRITT 1: Backend starten
+  1. Druecke: Windows-Taste + R
+  2. Tippe: cmd
+  3. Druecke: Enter
+  4. Fuehre aus:
+     cd /d "C:\Users\info\Desktop\Salz&Sand\backend"
+     npm run dev
+  5. Lasse dieses Fenster OFFEN!
+
+SCHRITT 2: Frontend starten (NEUES FENSTER)
+  1. Druecke: Windows-Taste + R
+  2. Tippe: cmd
+  3. Druecke: Enter
+  4. Fuehre aus:
+     cd /d "C:\Users\info\Desktop\Salz&Sand\frontend"
+     npm run dev
+  5. Lasse dieses Fenster OFFEN!
+
+SCHRITT 3: Browser oeffnen
+  1. Warte 15-20 Sekunden
+  2. Oeffne Browser
+  3. Gehe zu: http://localhost:5173/login
+
+
+WAS SOLLTEST DU SEHEN?
+------------------------------------------------
+Backend-Fenster:
+  - "Server läuft auf Port 3000" oder ähnlich
+  - KEINE roten Fehlermeldungen
+
+Frontend-Fenster:
+  - "Local: http://localhost:5173" oder ähnlich
+  - KEINE roten Fehlermeldungen
+
+Browser:
+  - Login-Seite mit Hintergrundbild
+  - Eingabefelder für E-Mail und Passwort
+
+
+FALLS ES NICHT FUNKTIONIERT:
+------------------------------------------------
+1. Pruefe die CMD-Fenster auf rote Fehlermeldungen
+2. Stelle sicher, dass beide Fenster OFFEN sind
+3. Warte weitere 30 Sekunden
+4. Versuche die URL nochmal: http://localhost:5173
+5. Pruefe ob Firewall/Antivirus blockiert
+
+
+WICHTIG:
+------------------------------------------------
+- Beide Server (Backend UND Frontend) muessen laufen!
+- Die CMD-Fenster muessen OFFEN bleiben!
+- Wenn du die Fenster schliesst, stoppen die Server!

@@ -1,0 +1,92 @@
+.birds-container {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+  z-index: 5 !important; /* Über Hintergrund, aber unter Login-Formular */
+  overflow: visible;
+}
+
+.bird {
+  position: absolute;
+  top: var(--top, 30%);
+  left: -50px;
+  width: var(--size, 24px);
+  height: var(--size, 24px);
+  animation: flyAcross var(--duration, 35s) linear infinite;
+  animation-delay: var(--delay, 0s);
+  opacity: 0.8;
+  filter: blur(0.2px);
+  z-index: 6;
+}
+
+.bird-svg {
+  width: 100%;
+  height: 100%;
+  transform: scaleX(-1); /* Vogel fliegt nach rechts */
+}
+
+/* Langsame Flug-Animation von links nach rechts */
+@keyframes flyAcross {
+  0% {
+    left: -80px;
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.7;
+  }
+  15% {
+    transform: translateY(-8px) scale(0.95);
+  }
+  50% {
+    transform: translateY(-12px) scale(1);
+  }
+  85% {
+    transform: translateY(-8px) scale(0.95);
+  }
+  95% {
+    opacity: 0.7;
+  }
+  100% {
+    left: calc(100% + 80px);
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Sanfte Flügelbewegung - sehr langsam */
+@keyframes wingFlap {
+  0%, 100% {
+    transform: scaleX(-1) translateY(0);
+  }
+  50% {
+    transform: scaleX(-1) translateY(-2px);
+  }
+}
+
+.bird-svg {
+  animation: wingFlap 3s ease-in-out infinite;
+}
+
+/* Responsive: Auf mobilen Geräten weniger Vögel und kleiner */
+@media (max-width: 768px) {
+  .bird {
+    opacity: 0.5;
+    filter: blur(1px);
+  }
+  
+  .birds-container {
+    /* Zeige nur 3 Vögel auf Mobile */
+  }
+}
+
+/* Sehr langsame Animation für subtilen Effekt */
+@media (prefers-reduced-motion: reduce) {
+  .bird {
+    animation: none;
+    display: none;
+  }
+}

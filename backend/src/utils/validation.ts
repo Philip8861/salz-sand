@@ -26,6 +26,7 @@ export const loginSchema = z.object({
     .max(100)
     .transform(val => val.trim().toLowerCase()),
   password: z.string().min(1, 'Passwort erforderlich').max(100),
+  serverId: z.string().optional(), // Optional für Server-Auswahl
 });
 
 export const gameActionSchema = z.object({
@@ -37,3 +38,16 @@ export const gameActionSchema = z.object({
     sand: z.number().int().min(0).max(999999).optional(),
   }).optional(),
 });
+
+export const serverSchema = z.object({
+  name: z.string().min(1, 'Server-Name erforderlich').max(50, 'Server-Name zu lang'),
+  description: z.string().max(500, 'Beschreibung zu lang').optional(),
+  status: z.enum(['inactive', 'active', 'maintenance']).default('inactive'),
+  startTime: z.string().datetime().optional().nullable().or(z.null()),
+  settings: z.object({
+    gameSpeed: z.number().min(0.1, 'Spielgeschwindigkeit muss mindestens 0.1 sein').max(10, 'Spielgeschwindigkeit darf maximal 10 sein').default(1),
+    // Weitere Einstellungen können hier hinzugefügt werden
+  }).default({ gameSpeed: 1 }),
+});
+
+export const updateServerSchema = serverSchema.partial();

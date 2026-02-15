@@ -3,14 +3,21 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   padding: 20px;
+  box-sizing: border-box;
   /* Desktop-Bild (Standard) */
   background-image: url('/login-background.jpg.webp');
   background-size: cover;
-  background-position: center;
+  background-position: center calc(50% - 1cm);
   background-repeat: no-repeat;
+  /* Fixiert beim Scrollen - bleibt immer sichtbar */
   background-attachment: fixed;
+  /* Fallback-Farbe für leere Bereiche */
+  background-color: #1a1a2e;
   position: relative;
+  overflow: hidden;
 }
 
 /* Mobile-Bild für Smartphones */
@@ -18,28 +25,417 @@
   .auth-container {
     /* Mobile-optimiertes Bild verwenden */
     background-image: url('/login-background-mobile.webp');
-    /* background-attachment: fixed funktioniert auf Mobile nicht gut (Performance) */
-    background-attachment: scroll;
-    /* Bessere Positionierung für Mobile */
-    background-position: center top;
+    /* background-attachment: fixed auch auf Mobile - bleibt beim Scrollen */
+    background-attachment: fixed;
+    /* Bessere Positionierung für Mobile - 1cm nach oben */
+    background-position: center calc(50% - 1cm);
   }
 }
 
-/* Overlay für bessere Lesbarkeit (minimal für maximale Sichtbarkeit) */
+/* Overlay entfernt - Hintergrund bleibt klar und hell */
 .auth-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.1);
-  z-index: 0;
+  display: none;
 }
 
-.auth-container > * {
-  position: relative;
+/* Grid Controls Container */
+.grid-controls {
+  position: fixed !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  top: auto !important;
+  left: auto !important;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: flex-end;
+}
+
+/* Prozent-Raster Toggle Button */
+.grid-toggle-button {
+  padding: 10px 20px;
+  background: rgba(102, 126, 234, 0.9);
+  color: white;
+  border: none;
+  border-radius: 8px 0 0 0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s;
+}
+
+.grid-toggle-button:hover {
+  background: rgba(102, 126, 234, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Maus-Position-Anzeige */
+.mouse-position-display {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  margin-top: -10px;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  padding: 10px 14px;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 1001;
+  transition: opacity 0.2s;
+}
+
+.position-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  color: white;
+  font-size: 12px;
+}
+
+.position-info:last-of-type {
+  margin-bottom: 8px;
+}
+
+.position-label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.position-value {
+  font-weight: bold;
+  color: #667eea;
+  font-family: 'Courier New', monospace;
+}
+
+.position-hint {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Prozent-Raster */
+.percent-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.grid-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+.grid-line-horizontal {
+  width: 100%;
+  height: 1px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.5);
+}
+
+.grid-line-vertical {
+  height: 100%;
+  width: 1px;
+  border-left: 1px dashed rgba(255, 255, 255, 0.5);
+}
+
+.grid-label {
+  position: absolute;
+  background: rgba(102, 126, 234, 0.9);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.grid-line-horizontal .grid-label {
+  left: 5px;
+  top: -8px;
+}
+
+.grid-line-vertical .grid-label {
+  top: 5px;
+  left: -15px;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+/* Rote Linie SVG */
+.red-line-svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   z-index: 1;
+  pointer-events: none;
+}
+
+/* Wolke - fliegt langsam über den Himmel */
+.cloud-image {
+  position: fixed;
+  top: 15.98%; /* Startposition */
+  left: 36.15%; /* Startposition */
+  width: auto;
+  height: 9.4921875vh; /* 50% kleiner: 18.984375vh * 0.5 = 9.4921875vh */
+  max-width: 189.84375px; /* 50% kleiner: 379.6875px * 0.5 = 189.84375px */
+  z-index: 1; /* Über dem Hintergrund, aber unter dem Login-Formular */
+  pointer-events: none;
+  object-fit: contain;
+  /* Sehr langsame Flug-Animation - smooth */
+  animation: cloudFly 315s linear infinite; /* 50% schneller: 630s * 0.5 = 315s (5.25 Minuten) */
+  opacity: 0.9;
+  /* Performance-Optimierung für smooth Animation - nur transform */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Wolken-Flug-Animation - sehr langsam von Start- zu Zielposition, hardware-beschleunigt */
+@keyframes cloudFly {
+  0% {
+    transform: translate(0, 0) translateZ(0);
+  }
+  100% {
+    /* Berechne die Differenz zwischen Start- und Zielposition */
+    /* Start: top: 15.98%, left: 36.15% */
+    /* Ziel: top: 3.17%, left: 1.93% */
+    /* Differenz: top: -12.81%, left: -34.22% */
+    transform: translate(calc(-34.22vw), calc(-12.81vh)) translateZ(0);
+  }
+}
+
+/* Zweite Wolke - fliegt langsam über den Himmel */
+.cloud-image-2 {
+  position: fixed;
+  top: 4.76%; /* Startposition */
+  left: 44.95%; /* Startposition */
+  width: auto;
+  height: 9.4921875vh; /* 50% kleiner: 18.984375vh * 0.5 = 9.4921875vh */
+  max-width: 189.84375px; /* 50% kleiner: 379.6875px * 0.5 = 189.84375px */
+  z-index: 1; /* Über dem Hintergrund, aber unter dem Login-Formular */
+  pointer-events: none;
+  object-fit: contain;
+  /* Sehr langsame Flug-Animation - smooth */
+  animation: cloudFly2 157.5s linear infinite; /* 50% schneller: 315s * 0.5 = 157.5s (2.625 Minuten) */
+  opacity: 0.9;
+  /* Performance-Optimierung für smooth Animation - nur transform */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Zweite Wolken-Flug-Animation - sehr langsam von Start- zu Zielposition, hardware-beschleunigt */
+@keyframes cloudFly2 {
+  0% {
+    transform: translate(0, 0) translateZ(0);
+  }
+  100% {
+    /* Berechne die Differenz zwischen Start- und Zielposition */
+    /* Start: top: 4.76%, left: 44.95% */
+    /* Ziel: top: 27.83%, left: 4.58% */
+    /* Differenz: top: +23.07%, left: -40.37% */
+    transform: translate(calc(-40.37vw), calc(23.07vh)) translateZ(0);
+  }
+}
+
+/* Dritte Wolke - fliegt langsam über den Himmel */
+.cloud-image-3 {
+  position: fixed;
+  top: 28.15%; /* Startposition */
+  left: 22.55%; /* Startposition */
+  width: auto;
+  height: 4.74609375vh; /* 50% kleiner: 9.4921875vh * 0.5 = 4.74609375vh */
+  max-width: 94.921875px; /* 50% kleiner: 189.84375px * 0.5 = 94.921875px */
+  z-index: 1; /* Über dem Hintergrund, aber unter dem Login-Formular */
+  pointer-events: none;
+  object-fit: contain;
+  /* Sehr langsame Flug-Animation - smooth */
+  animation: cloudFly3 315s linear infinite; /* Gleiche Geschwindigkeit wie erste Wolke */
+  opacity: 0.9;
+  /* Performance-Optimierung für smooth Animation - nur transform */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Dritte Wolken-Flug-Animation - sehr langsam von Start- zu Zielposition, hardware-beschleunigt */
+@keyframes cloudFly3 {
+  0% {
+    transform: translate(0, 0) translateZ(0);
+  }
+  100% {
+    /* Berechne die Differenz zwischen Start- und Zielposition */
+    /* Start: top: 28.15%, left: 22.55% */
+    /* Ziel: top: 6.98%, left: 6.77% */
+    /* Differenz: top: -21.17%, left: -15.78% */
+    transform: translate(calc(-15.78vw), calc(-21.17vh)) translateZ(0);
+  }
+}
+
+/* Vierte Wolke - fliegt langsam über den Himmel */
+.cloud-image-4 {
+  position: fixed;
+  top: 14.29%; /* Startposition */
+  left: 16.93%; /* Startposition */
+  width: auto;
+  height: 9.4921875vh; /* Gleiche Größe wie andere Wolken */
+  max-width: 189.84375px; /* Gleiche Größe wie andere Wolken */
+  z-index: 1; /* Über dem Hintergrund, aber unter dem Login-Formular */
+  pointer-events: none;
+  object-fit: contain;
+  /* Sehr langsame Flug-Animation - smooth */
+  animation: cloudFly4 315s linear infinite; /* Gleiche Geschwindigkeit wie erste Wolke */
+  opacity: 0.9;
+  /* Performance-Optimierung für smooth Animation - nur transform */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Vierte Wolken-Flug-Animation - sehr langsam von Start- zu Zielposition, hardware-beschleunigt */
+@keyframes cloudFly4 {
+  0% {
+    transform: translate(0, 0) translateZ(0);
+  }
+  100% {
+    /* Berechne die Differenz zwischen Start- und Zielposition */
+    /* Start: top: 14.29%, left: 16.93% */
+    /* Ziel: top: 2.12%, left: 1.30% */
+    /* Differenz: top: -12.17%, left: -15.63% */
+    transform: translate(calc(-15.63vw), calc(-12.17vh)) translateZ(0);
+  }
+}
+
+/* Fünfte Wolke - fliegt langsam über den Himmel */
+.cloud-image-5 {
+  position: fixed;
+  top: 21.27%; /* Startposition */
+  left: 30.63%; /* Startposition */
+  width: auto;
+  height: 9.4921875vh; /* Gleiche Größe wie andere Wolken */
+  max-width: 189.84375px; /* Gleiche Größe wie andere Wolken */
+  z-index: 1; /* Über dem Hintergrund, aber unter dem Login-Formular */
+  pointer-events: none;
+  object-fit: contain;
+  /* Sehr langsame Flug-Animation - smooth */
+  animation: cloudFly5 78.75s linear infinite; /* Nochmal 50% schneller: 157.5s / 2 = 78.75s */
+  opacity: 0.9;
+  /* Performance-Optimierung für smooth Animation - nur transform */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Fünfte Wolken-Flug-Animation - sehr langsam von Start- zu Zielposition, hardware-beschleunigt */
+@keyframes cloudFly5 {
+  0% {
+    transform: translate(0, 0) translateZ(0);
+  }
+  100% {
+    /* Berechne die Differenz zwischen Start- und Zielposition */
+    /* Start: top: 21.27%, left: 30.63% */
+    /* Ziel: top: 3.07%, left: 14.32% */
+    /* Differenz: top: -18.20%, left: -16.31% */
+    transform: translate(calc(-16.31vw), calc(-18.20vh)) translateZ(0);
+  }
+}
+
+
+/* Affe-Bild - am Hintergrundbild ausgerichtet */
+.affee-image {
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  /* Position wird per JavaScript gesetzt (skaliert mit Container) */
+  height: auto;
+  /* Bild bleibt proportional */
+  object-fit: contain;
+  /* Schaukel-Animation */
+  animation: swing 3s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+/* Schaukel-Animation - leichtes Hin- und Herbewegen */
+@keyframes swing {
+  0%, 100% {
+    transform: translateX(-50%) rotate(-2deg);
+  }
+  50% {
+    transform: translateX(-50%) rotate(2deg);
+  }
+}
+
+/* Lagerfeuer-Glow-Effekt - nur über dem Lagerfeuer-Bereich */
+.auth-container::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  height: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 140, 0, 0) 0%,
+    rgba(255, 140, 0, 0) 30%,
+    rgba(255, 100, 0, 0) 60%,
+    rgba(255, 140, 0, 0) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+  animation: fireGlow 2.5s ease-in-out infinite;
+  mix-blend-mode: screen;
+}
+
+/* Lagerfeuer-Glow-Animation - nur der Glow ändert sich */
+@keyframes fireGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(20px);
+  }
+  25% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1.05);
+    filter: blur(25px);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.1);
+    filter: blur(30px);
+  }
+  75% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1.05);
+    filter: blur(25px);
+  }
+}
+
+
+/* Stelle sicher, dass die auth-card zentriert ist */
+.auth-container > .auth-card {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
 .auth-card {
@@ -51,6 +447,28 @@
   width: 100%;
   max-width: 400px;
   border: none;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* Scrollbar styling für WebKit-Browser */
+.auth-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.auth-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.auth-card::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.auth-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .auth-card h1 {
@@ -151,9 +569,9 @@
     padding: 10px;
   }
 
-  /* Overlay auf Mobile etwas dunkler für bessere Lesbarkeit */
+  /* Overlay entfernt auf Mobile */
   .auth-container::before {
-    background: rgba(0, 0, 0, 0.2);
+    display: none;
   }
   
   .auth-card {

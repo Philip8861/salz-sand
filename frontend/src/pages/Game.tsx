@@ -18,7 +18,7 @@ const Game = () => {
   const [gameData, setGameData] = useState<GameData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,9 +58,16 @@ const Game = () => {
     <div className="game-container">
       <header className="game-header">
         <h1>Salz&Sand</h1>
-        <button onClick={() => { logout(); navigate('/login'); }}>
-          Abmelden
-        </button>
+        <div>
+          {user?.isAdmin && (
+            <button onClick={() => navigate('/admin')} style={{ marginRight: '10px' }}>
+              Admin-Panel
+            </button>
+          )}
+          <button onClick={() => { logout(); navigate('/login'); }}>
+            Abmelden
+          </button>
+        </div>
       </header>
 
       <div className="game-content">

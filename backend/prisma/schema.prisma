@@ -12,10 +12,11 @@ model User {
   username  String   @unique
   email     String   @unique
   password  String
+  isAdmin   Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
-  gameData  GameData?
+  gameData  GameData[]
   actions   GameAction[]
   
   @@index([email])
@@ -23,10 +24,29 @@ model User {
   @@map("users")
 }
 
+model Server {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  status      String   @default("inactive") // inactive, active, maintenance
+  startTime   DateTime?
+  settings    Json     // Spielgeschwindigkeit, etc.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  gameData    GameData[]
+  
+  @@index([status])
+  @@index([startTime])
+  @@map("servers")
+}
+
 model GameData {
   id        String   @id @default(cuid())
-  userId    String   @unique
+  userId    String
+  serverId  String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  server    Server   @relation(fields: [serverId], references: [id], onDelete: Cascade)
   
   level     Int      @default(1)
   experience Int     @default(0)
@@ -39,7 +59,9 @@ model GameData {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
+  @@unique([userId, serverId])
   @@index([userId])
+  @@index([serverId])
   @@map("game_data")
 }
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../hooks/useAuth';
+import SeaGlitter from '../components/SeaGlitter';
 import './Auth.css';
 
 const Register = () => {
@@ -35,6 +36,7 @@ const Register = () => {
 
   return (
     <div className="auth-container">
+      <SeaGlitter />
       <div className="auth-card">
         <h1>Salz&Sand</h1>
         <h2>Registrieren</h2>

@@ -1,0 +1,70 @@
+.sparkles-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 6; /* Über dem Hintergrundbild, aber unter dem Login-Formular */
+  overflow: visible;
+}
+
+.sparkle {
+  position: absolute;
+  top: 20%;
+  left: var(--startX, 50%);
+  width: var(--size, 4px);
+  height: var(--size, 4px);
+  background: radial-gradient(circle, rgba(255, 180, 0, 0.9) 0%, rgba(255, 140, 0, 0.7) 40%, rgba(255, 100, 0, 0.3) 70%, rgba(255, 80, 0, 0) 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(255, 180, 0, 0.9), 0 0 8px rgba(255, 140, 0, 0.6), 0 0 12px rgba(255, 100, 0, 0.3);
+  animation: flyAway var(--duration, 8s) ease-out infinite;
+  animation-delay: var(--delay, 0s);
+  transform: translateX(-50%);
+  will-change: transform, opacity;
+}
+
+/* Funken fliegen gerade nach oben und lösen sich realistisch auf */
+@keyframes flyAway {
+  0% {
+    top: 20%;
+    left: var(--startX, 50%);
+    transform: translateX(-50%) translateY(0) scale(1);
+    opacity: 1;
+    filter: brightness(1) blur(0px);
+  }
+  20% {
+    transform: translateX(-50%) translateY(calc(var(--distance, 175px) * -0.2)) scale(0.95);
+    opacity: 0.9;
+    filter: brightness(0.9) blur(0.5px);
+  }
+  40% {
+    transform: translateX(-50%) translateY(calc(var(--distance, 175px) * -0.4)) scale(0.85);
+    opacity: 0.75;
+    filter: brightness(0.75) blur(1px);
+  }
+  60% {
+    transform: translateX(-50%) translateY(calc(var(--distance, 175px) * -0.6)) scale(0.7);
+    opacity: 0.6;
+    filter: brightness(0.6) blur(1.5px);
+  }
+  80% {
+    transform: translateX(-50%) translateY(calc(var(--distance, 175px) * -0.8)) scale(0.5);
+    opacity: 0.4;
+    filter: brightness(0.4) blur(2px);
+  }
+  100% {
+    top: 20%;
+    transform: translateX(-50%) translateY(calc(var(--distance, 175px) * -1)) scale(0.3);
+    opacity: 0;
+    filter: brightness(0.2) blur(3px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sparkle {
+    width: calc(var(--size, 5px) * 0.8);
+    height: calc(var(--size, 5px) * 0.8);
+  }
+}

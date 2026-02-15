@@ -146,11 +146,11 @@ router.post('/register', registerLimiter, async (req, res) => {
   }
 });
 
-// Login mit Account Lockout
+// Login mit Account Lockout und Server-Auswahl
 router.post('/login', loginLimiter, async (req, res) => {
   try {
     const validated = loginSchema.parse(req.body);
-    const { email, password } = validated;
+    const { email, password, serverId } = validated;
 
     // Prüfe Account Lockout
     if (await checkAccountLockout(email)) {
@@ -161,7 +161,6 @@ router.post('/login', loginLimiter, async (req, res) => {
 
     const user = await prisma.user.findUnique({
       where: { email },
-      include: { gameData: true }
     });
 
     if (!user) {
@@ -180,28 +179,100 @@ router.post('/login', loginLimiter, async (req, res) => {
     // Erfolgreicher Login - Reset Failed Attempts
     clearFailedAttempts(email);
 
+    // Wenn Server-ID angegeben, prüfe ob Server existiert, aktiv ist und Startzeit erreicht wurde
+    let selectedServer = null;
+    if (serverId) {
+      selectedServer = await prisma.server.findUnique({
+        where: { id: serverId },
+      });
+
+      if (!selectedServer) {
+        return res.status(404).json({ error: 'Server nicht gefunden' });
+      }
+
+      if (selectedServer.status !== 'active') {
+        return res.status(400).json({ error: 'Server ist nicht aktiv' });
+      }
+
+      // Prüfe ob Startzeit erreicht wurde
+      const now = new Date();
+      if (selectedServer.startTime && selectedServer.startTime > now) {
+        return res.status(400).json({ 
+          error: 'Server ist noch nicht verfügbar',
+          startTime: selectedServer.startTime.toISOString(),
+        });
+      }
+
+      // Erstelle oder hole GameData für diesen Server
+      await prisma.gameData.upsert({
+        where: {
+          userId_serverId: {
+            userId: user.id,
+            serverId: serverId,
+          },
+        },
+        create: {
+          userId: user.id,
+          serverId: serverId,
+          level: 1,
+          experience: 0,
+          coins: 100,
+          salt: 0,
+          sand: 0,
+        },
+        update: {},
+      });
+    }
+
     // Log Login
     await prisma.gameAction.create({
       data: {
         userId: user.id,
         actionType: 'user_login',
-        data: { timestamp: new Date(), ip: req.ip },
+        data: { timestamp: new Date(), ip: req.ip, serverId: serverId || null },
       }
     });
 
     const token = jwt.sign(
-      { userId: user.id, type: 'access' },
+      { userId: user.id, serverId: serverId || null, type: 'access' },
       process.env.JWT_SECRET!,
       { expiresIn: '24h' }
     );
+
+    // Hole alle verfügbaren Server (nur die, deren Startzeit erreicht wurde)
+    const now = new Date();
+    const servers = await prisma.server.findMany({
+      where: {
+        status: 'active',
+        OR: [
+          { startTime: { lte: now } },
+          { startTime: null },
+        ]
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        settings: true,
+        startTime: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
 
     res.json({
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
+        isAdmin: user.isAdmin,
       },
       token,
+      server: selectedServer ? {
+        id: selectedServer.id,
+        name: selectedServer.name,
+        settings: selectedServer.settings,
+      } : null,
+      servers, // Alle verfügbaren Server für Frontend
     });
   } catch (error: any) {
     if (error.name === 'ZodError') {
@@ -212,7 +283,7 @@ router.post('/login', loginLimiter, async (req, res) => {
   }
 });
 
-// Get Current User
+// Get Current User (mit Server-Informationen)
 router.get('/me', authenticate, async (req: AuthRequest, res) => {
   try {
     if (!req.userId) {
@@ -225,17 +296,7 @@ router.get('/me', authenticate, async (req: AuthRequest, res) => {
         id: true,
         username: true,
         email: true,
-        gameData: {
-          select: {
-            id: true,
-            level: true,
-            experience: true,
-            coins: true,
-            salt: true,
-            sand: true,
-            lastAction: true,
-          }
-        },
+        isAdmin: true,
         createdAt: true,
       }
     });
@@ -244,7 +305,42 @@ router.get('/me', authenticate, async (req: AuthRequest, res) => {
       return res.status(404).json({ error: 'Benutzer nicht gefunden' });
     }
 
-    res.json({ user });
+    // Wenn Server ausgewählt, hole GameData für diesen Server
+    let gameData = null;
+    let server = null;
+    if (req.serverId) {
+      const data = await prisma.gameData.findUnique({
+        where: {
+          userId_serverId: {
+            userId: req.userId,
+            serverId: req.serverId,
+          }
+        },
+        include: {
+          server: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+              settings: true,
+            }
+          }
+        }
+      });
+      if (data) {
+        gameData = {
+          level: data.level,
+          experience: data.experience,
+          coins: data.coins,
+          salt: data.salt,
+          sand: data.sand,
+          lastAction: data.lastAction,
+        };
+        server = data.server;
+      }
+    }
+
+    res.json({ user, gameData, server });
   } catch (error) {
     console.error('Get user error:', error);
     res.status(500).json({ error: 'Fehler beim Laden des Benutzers' });

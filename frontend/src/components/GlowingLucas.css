@@ -1,0 +1,68 @@
+.glowing-lucas {
+  position: fixed;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  pointer-events: none;
+}
+
+.lucas-text {
+  font-size: 120px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.6),
+    0 0 30px rgba(100, 200, 255, 0.8),
+    0 0 40px rgba(100, 200, 255, 0.6),
+    0 0 50px rgba(100, 200, 255, 0.4),
+    0 0 60px rgba(100, 200, 255, 0.3),
+    0 0 80px rgba(100, 200, 255, 0.2);
+  animation: glowPulse 2s ease-in-out infinite;
+  display: block;
+  letter-spacing: 8px;
+}
+
+/* Leuchtende Puls-Animation */
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 0.9;
+    transform: scale(1);
+    text-shadow: 
+      0 0 10px rgba(255, 255, 255, 0.8),
+      0 0 20px rgba(255, 255, 255, 0.6),
+      0 0 30px rgba(100, 200, 255, 0.8),
+      0 0 40px rgba(100, 200, 255, 0.6),
+      0 0 50px rgba(100, 200, 255, 0.4),
+      0 0 60px rgba(100, 200, 255, 0.3),
+      0 0 80px rgba(100, 200, 255, 0.2);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+    text-shadow: 
+      0 0 15px rgba(255, 255, 255, 1),
+      0 0 30px rgba(255, 255, 255, 0.8),
+      0 0 45px rgba(100, 200, 255, 1),
+      0 0 60px rgba(100, 200, 255, 0.8),
+      0 0 75px rgba(100, 200, 255, 0.6),
+      0 0 90px rgba(100, 200, 255, 0.4),
+      0 0 120px rgba(100, 200, 255, 0.3);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .lucas-text {
+    font-size: 80px;
+    letter-spacing: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lucas-text {
+    font-size: 60px;
+    letter-spacing: 2px;
+  }
+}

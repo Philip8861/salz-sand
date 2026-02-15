@@ -40,11 +40,29 @@ const validateResourceAmount = (amount: number, max: number): number => {
 
 router.use(authenticate);
 
-// Get Game Data
+// Get Game Data (server-spezifisch)
 router.get('/data', async (req: AuthRequest, res) => {
   try {
+    if (!req.serverId) {
+      return res.status(400).json({ error: 'Kein Server ausgewählt' });
+    }
+
     const gameData = await prisma.gameData.findUnique({
-      where: { userId: req.userId! }
+      where: {
+        userId_serverId: {
+          userId: req.userId!,
+          serverId: req.serverId,
+        }
+      },
+      include: {
+        server: {
+          select: {
+            id: true,
+            name: true,
+            settings: true,
+          }
+        }
+      }
     });
 
     if (!gameData) {
@@ -59,7 +77,9 @@ router.get('/data', async (req: AuthRequest, res) => {
         coins: gameData.coins,
         salt: gameData.salt,
         sand: gameData.sand,
-      }
+        lastAction: gameData.lastAction,
+      },
+      server: gameData.server,
     });
   } catch (error) {
     console.error('Get game data error:', error);
@@ -78,10 +98,30 @@ router.post('/action', strictRateLimiter, async (req: AuthRequest, res) => {
       return res.status(429).json({ error: 'Aktion zu schnell. Bitte warten.' });
     }
 
+    if (!req.serverId) {
+      return res.status(400).json({ error: 'Kein Server ausgewählt' });
+    }
+
+    // Hole Server-Einstellungen
+    const server = await prisma.server.findUnique({
+      where: { id: req.serverId },
+    });
+
+    if (!server || server.status !== 'active') {
+      return res.status(400).json({ error: 'Server nicht verfügbar' });
+    }
+
+    const gameSpeed = (server.settings as any)?.gameSpeed || 1;
+
     // Hole aktuelle Game Data mit Lock (FOR UPDATE)
     const gameData = await prisma.$transaction(async (tx) => {
       return await tx.gameData.findUnique({
-        where: { userId: req.userId! }
+        where: {
+          userId_serverId: {
+            userId: req.userId!,
+            serverId: req.serverId!,
+          }
+        }
       });
     });
 
@@ -100,15 +140,17 @@ router.post('/action', strictRateLimiter, async (req: AuthRequest, res) => {
 
     switch (actionType) {
       case 'collect_salt':
-        // Maximal 1 Salz pro Aktion
-        updatedData.salt += 1;
-        updatedData.experience += 5;
+        // Maximal 1 Salz pro Aktion, multipliziert mit Spielgeschwindigkeit
+        const saltAmount = Math.floor(1 * gameSpeed);
+        updatedData.salt += saltAmount;
+        updatedData.experience += Math.floor(5 * gameSpeed);
         break;
 
       case 'collect_sand':
-        // Maximal 1 Sand pro Aktion
-        updatedData.sand += 1;
-        updatedData.experience += 5;
+        // Maximal 1 Sand pro Aktion, multipliziert mit Spielgeschwindigkeit
+        const sandAmount = Math.floor(1 * gameSpeed);
+        updatedData.sand += sandAmount;
+        updatedData.experience += Math.floor(5 * gameSpeed);
         break;
 
       case 'sell_resources':
@@ -157,7 +199,12 @@ router.post('/action', strictRateLimiter, async (req: AuthRequest, res) => {
     const result = await prisma.$transaction(async (tx) => {
       // Prüfe nochmal aktuelle Daten (Optimistic Locking)
       const currentData = await tx.gameData.findUnique({
-        where: { userId: req.userId! }
+        where: {
+          userId_serverId: {
+            userId: req.userId!,
+            serverId: req.serverId!,
+          }
+        }
       });
 
       if (!currentData) {
@@ -170,7 +217,12 @@ router.post('/action', strictRateLimiter, async (req: AuthRequest, res) => {
       }
 
       const updated = await tx.gameData.update({
-        where: { userId: req.userId! },
+        where: {
+          userId_serverId: {
+            userId: req.userId!,
+            serverId: req.serverId!,
+          }
+        },
         data: {
           salt: updatedData.salt,
           sand: updatedData.sand,

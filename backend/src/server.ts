@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import authRoutes from './routes/auth';
 import gameRoutes from './routes/game';
+import serverRoutes from './routes/servers';
 import { errorHandler } from './middleware/errorHandler';
 import { rateLimiter } from './middleware/rateLimiter';
 import {
@@ -77,6 +78,7 @@ app.use('/api/', rateLimiter);
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/game', gameRoutes);
+app.use('/api/servers', serverRoutes);
 
 // Root Route
 app.get('/', (req, res) => {
