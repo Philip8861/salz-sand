@@ -9,6 +9,7 @@ const Sparkles = () => {
     distance: 100 + Math.random() * 150, // Entfernung: 100-250px nach oben
     size: 2 + Math.random() * 3, // Größe zwischen 2px und 5px (kleinere, realistischere Funken)
     startX: 48 + Math.random() * 4, // Startposition: 48-52% (über dem Feuer)
+    angle: -90 + (Math.random() - 0.5) * 20, // Winkel: -90° (nach oben) mit leichter Variation
   }));
 
   return (

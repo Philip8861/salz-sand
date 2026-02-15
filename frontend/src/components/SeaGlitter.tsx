@@ -56,7 +56,7 @@ const SeaGlitter = ({ clipPathId, points }: SeaGlitterProps) => {
     setSizes();
 
     // Bei Resize neu setzen (für sofortige Anpassung)
-    let resizeTimeout: NodeJS.Timeout;
+    let resizeTimeout: ReturnType<typeof setTimeout>;
     const handleResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(setSizes, 50);

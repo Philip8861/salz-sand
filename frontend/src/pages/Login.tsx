@@ -9,6 +9,7 @@ interface Server {
   id: string;
   name: string;
   description?: string;
+  status?: string;
   settings?: any;
 }
 
@@ -21,7 +22,6 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [loadingServers, setLoadingServers] = useState(true);
   const [showGrid, setShowGrid] = useState(false);
-  const [affePosition, setAffePosition] = useState<{ top: number; left: number } | null>(null);
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null);
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -88,10 +88,7 @@ const Login = () => {
       const scaledSize = refSizePx * scale;
       affeImageRef.current.style.width = `${scaledSize}px`;
 
-      // Aktualisiere Position für Anzeige (in Prozent)
-      const topPercent = (top / currentHeight) * 100;
-      const leftPercent = (left / currentWidth) * 100;
-      setAffePosition({ top: topPercent, left: leftPercent });
+      // Position wird dynamisch gesetzt
     };
 
     // Initial setzen
@@ -100,7 +97,7 @@ const Login = () => {
     // Bei Resize neu berechnen (nur bei echten Größenänderungen)
     let lastWidth = initialWidth;
     let lastHeight = initialHeight;
-    let resizeTimeout: NodeJS.Timeout;
+    let resizeTimeout: ReturnType<typeof setTimeout>;
     
     const handleResize = () => {
       clearTimeout(resizeTimeout);
@@ -204,12 +201,7 @@ const Login = () => {
     { top: 47.20, left: 0.16 }, // Zurück zum Start
   ];
 
-  // Konvertiere Prozent zu SVG-Koordinaten
-  const svgPath = redLinePoints.map((point, index) => {
-    const x = (point.left / 100) * 100; // SVG viewBox ist 0-100
-    const y = (point.top / 100) * 100;
-    return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-  }).join(' ');
+  // SVG-Pfad wird direkt im JSX generiert
 
   return (
     <div ref={containerRef} className="auth-container">
