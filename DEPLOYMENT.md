@@ -1,4 +1,4 @@
-# 🚀 Deployment-Anleitung für Salz&Sand
+# 🚀 Deployment-Anleitung für Salz und Sand
 
 ## Übersicht
 
@@ -38,7 +38,7 @@ Dieses Projekt nutzt **Git-basiertes Deployment**:
    FRONTEND_URL=https://deine-frontend-url.vercel.app
    ```
 
-7. **Build & Deploy**:
+7. **Build und Deploy**:
    - Railway erkennt automatisch `package.json`
    - Build Command: `npm install && npm run build`
    - Start Command: `npm start`
@@ -129,12 +129,12 @@ Dieses Projekt nutzt **Git-basiertes Deployment**:
 
 ## 🔄 Git Workflow (Push to Deploy)
 
-### Erster Commit & Push
+### Erster Commit und Push
 
 ```bash
 # Im Projekt-Root
 git add .
-git commit -m "Initial commit: Salz&Sand Browsergame"
+git commit -m "Initial commit: Salz und Sand Browsergame"
 git branch -M main
 
 # GitHub Repository erstellen (auf github.com)

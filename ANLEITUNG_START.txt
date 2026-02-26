@@ -1,5 +1,5 @@
 ========================================
-  SALZ&SAND - SERVER STARTEN
+  SALZ UND SAND - SERVER STARTEN
 ========================================
 
 OPTION 1: Mit Batch-Datei (EINFACHSTE METHODE)
@@ -16,7 +16,7 @@ SCHRITT 1: Backend starten
   2. Tippe: cmd
   3. Druecke: Enter
   4. Fuehre aus:
-     cd /d "C:\Users\info\Desktop\Salz&Sand\backend"
+     cd /d "C:\Users\info\Desktop\SalzundSand\backend"
      npm run dev
   5. Lasse dieses Fenster OFFEN!
 
@@ -25,7 +25,7 @@ SCHRITT 2: Frontend starten (NEUES FENSTER)
   2. Tippe: cmd
   3. Druecke: Enter
   4. Fuehre aus:
-     cd /d "C:\Users\info\Desktop\Salz&Sand\frontend"
+     cd /d "C:\Users\info\Desktop\SalzundSand\frontend"
      npm run dev
   5. Lasse dieses Fenster OFFEN!
 

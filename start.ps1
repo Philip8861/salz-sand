@@ -1,6 +1,6 @@
-# Salz&Sand - Server Starter
+# Salz und Sand - Server Starter
 Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  Salz&Sand - Server Starter" -ForegroundColor Cyan
+Write-Host "  Salz und Sand - Server Starter" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 

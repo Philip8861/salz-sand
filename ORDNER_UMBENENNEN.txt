@@ -1,0 +1,11 @@
+Projektordner umbenennen (einmalig)
+==================================
+
+Damit es keine Probleme mehr mit dem Zeichen "&" in der Konsole gibt:
+
+1. Alle Programme/Cursor/Terminals schließen, die auf diesen Ordner zugreifen.
+2. Im Windows-Explorer zum übergeordneten Ordner gehen (z. B. Desktop).
+3. Den Ordner "Salz&Sand" mit Rechtsklick → "Umbenennen" in "SalzundSand" umbenennen.
+4. Projekt in Cursor/IDE wieder öffnen: den Ordner "SalzundSand" auswählen.
+
+Danach funktionieren Befehle wie "npm run dev" im Projektordner ohne Pfadprobleme.

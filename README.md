@@ -1,4 +1,4 @@
-# Salz&Sand - Browsergame
+# Salz und Sand - Browsergame
 
 Ein sicheres, professionelles Browsergame mit serverseitiger Validierung.
 
@@ -56,7 +56,7 @@ npm run dev
 - ✅ Alle Game-Logik serverseitig
 - ✅ JWT Authentifizierung
 - ✅ Rate Limiting
-- ✅ Input Validation & Sanitization
+- ✅ Input Validation und Sanitization
 - ✅ SQL Injection Prevention (Prisma)
 - ✅ XSS Prevention
 - ✅ CORS Konfiguration
@@ -71,7 +71,7 @@ npm run dev
 ## 📁 Projektstruktur
 
 ```
-Salz&Sand/
+SalzundSand/
 ├── backend/          # Node.js + Express API
 ├── frontend/         # React Frontend
 └── README.md
@@ -79,8 +79,8 @@ Salz&Sand/
 
 ## 🎮 Game Features
 
-- Benutzer-Registrierung & Login
-- Salz & Sand sammeln
+- Benutzer-Registrierung und Login
+- Salz und Sand sammeln
 - Ressourcen verkaufen
 - Level-System mit Erfahrungspunkten
 - Münzen-System

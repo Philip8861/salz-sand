@@ -1,0 +1,77 @@
+/* Position wird von Login per JS gesetzt, hinter Login_Bambus (z-index: 1 wie Affe) */
+.fire-sparks-wrapper {
+  position: fixed;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  isolation: isolate;
+}
+
+.fire-sparks-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+/* --scale wird von Login gesetzt (gleiche Cover-Berechnung wie Affe/Feuer/Glitzer) */
+.fire-spark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--size, 3px) * var(--scale, 1));
+  height: calc(var(--size, 3px) * var(--scale, 1));
+  background: radial-gradient(circle, rgba(200, 120, 30, 1) 0%, rgba(180, 90, 20, 0.9) 40%, rgba(150, 60, 10, 0.5) 70%, rgba(120, 40, 5, 0) 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 3px rgba(200, 120, 30, 0.8), 0 0 6px rgba(180, 90, 20, 0.5), 0 0 9px rgba(150, 60, 10, 0.3);
+  animation: sparkRise var(--duration, 4s) ease-out infinite;
+  animation-delay: var(--delay, 0s);
+  will-change: transform, opacity;
+}
+
+/* Funken steigen auf – Distanz/Offset mit var(--scale) wie bei Affe/Feuer */
+@keyframes sparkRise {
+  0% {
+    transform: translate(calc(var(--horizontalOffset, 0px) * var(--scale, 1)), 0) scale(1);
+    opacity: 1;
+    filter: brightness(1) blur(0px);
+  }
+  20% {
+    transform: translate(calc((var(--horizontalOffset, 0px) + var(--wiggle1, 0px)) * var(--scale, 1)), calc(var(--distance, 175px) * -0.2 * var(--scale, 1))) scale(0.95);
+    opacity: 0.95;
+    filter: brightness(0.9) blur(0.3px);
+  }
+  40% {
+    transform: translate(calc((var(--horizontalOffset, 0px) * 1.3 + var(--wiggle2, 0px)) * var(--scale, 1)), calc(var(--distance, 175px) * -0.4 * var(--scale, 1))) scale(0.85);
+    opacity: 0.8;
+    filter: brightness(0.75) blur(0.6px);
+  }
+  60% {
+    transform: translate(calc((var(--horizontalOffset, 0px) * 1.6 + var(--wiggle3, 0px)) * var(--scale, 1)), calc(var(--distance, 175px) * -0.6 * var(--scale, 1))) scale(0.7);
+    opacity: 0.65;
+    filter: brightness(0.6) blur(1px);
+  }
+  80% {
+    transform: translate(calc((var(--horizontalOffset, 0px) * 1.9 + var(--wiggle2, 0px) * 0.8) * var(--scale, 1)), calc(var(--distance, 175px) * -0.8 * var(--scale, 1))) scale(0.5);
+    opacity: 0.4;
+    filter: brightness(0.45) blur(1.5px);
+  }
+  100% {
+    transform: translate(calc((var(--horizontalOffset, 0px) * 2.2 + var(--wiggle1, 0px) * 0.6) * var(--scale, 1)), calc(var(--distance, 175px) * -1 * var(--scale, 1))) scale(0.3);
+    opacity: 0;
+    filter: brightness(0.3) blur(2px);
+  }
+}
+
+/* Responsive: zusätzlich zu --scale */
+@media (max-width: 768px) {
+  .fire-spark {
+    width: calc(var(--size, 3px) * var(--scale, 1) * 0.8);
+    height: calc(var(--size, 3px) * var(--scale, 1) * 0.8);
+  }
+}

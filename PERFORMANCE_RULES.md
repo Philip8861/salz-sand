@@ -1,4 +1,4 @@
-# 🚀 Performance-Regeln für Salz&Sand
+# 🚀 Performance-Regeln für Salz und Sand
 
 ## ⚠️ WICHTIG: Performance-Hinweise
 

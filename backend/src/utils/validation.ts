@@ -18,11 +18,16 @@ export const registerSchema = z.object({
     .regex(/[A-Z]/, 'Passwort muss mindestens einen Großbuchstaben enthalten')
     .regex(/[0-9]/, 'Passwort muss mindestens eine Zahl enthalten')
     .regex(/[@$!%*?&]/, 'Passwort muss mindestens ein Sonderzeichen enthalten'),
+  passwordRepeat: z.string().min(1, 'Passwort wiederholen erforderlich'),
+  agbAccepted: z.literal(true, { errorMap: () => ({ message: 'Bitte die AGB akzeptieren' }) }),
+}).refine((data) => data.password === data.passwordRepeat, {
+  message: 'Passwörter stimmen nicht überein',
+  path: ['passwordRepeat'],
 });
 
 export const loginSchema = z.object({
-  email: z.string()
-    .email('Ungültige E-Mail-Adresse')
+  username: z.string()
+    .min(1, 'Benutzername erforderlich')
     .max(100)
     .transform(val => val.trim().toLowerCase()),
   password: z.string().min(1, 'Passwort erforderlich').max(100),

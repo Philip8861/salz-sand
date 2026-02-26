@@ -11,9 +11,9 @@
 ## Schritt 2: Code zu GitHub pushen
 
 ```bash
-# Im Projekt-Ordner (C:\Users\info\Desktop\Salz&Sand)
+# Im Projekt-Ordner (z. B. C:\Users\info\Desktop\SalzundSand)
 git add .
-git commit -m "Initial commit: Salz&Sand Browsergame"
+git commit -m "Initial commit: Salz und Sand Browsergame"
 
 # Ersetze DEIN-USERNAME mit deinem GitHub-Username
 git remote add origin https://github.com/DEIN-USERNAME/salz-sand.git
@@ -85,7 +85,7 @@ git add .
 git commit -m "Neue Funktion hinzugefügt"
 git push
 
-# 3. Fertig! Railway & Vercel deployen automatisch
+# 3. Fertig! Railway und Vercel deployen automatisch
 ```
 
 ---

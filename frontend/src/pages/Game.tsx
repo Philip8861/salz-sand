@@ -57,7 +57,7 @@ const Game = () => {
   return (
     <div className="game-container">
       <header className="game-header">
-        <h1>Salz&Sand</h1>
+        <h1>Salz und Sand</h1>
         <div>
           {user?.isAdmin && (
             <button onClick={() => navigate('/admin')} style={{ marginRight: '10px' }}>

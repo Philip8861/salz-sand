@@ -6,6 +6,7 @@ import { PrismaClient } from '@prisma/client';
 import authRoutes from './routes/auth';
 import gameRoutes from './routes/game';
 import serverRoutes from './routes/servers';
+import adminRoutes from './routes/admin';
 import { errorHandler } from './middleware/errorHandler';
 import { rateLimiter } from './middleware/rateLimiter';
 import {
@@ -79,11 +80,12 @@ app.use('/api/', rateLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/game', gameRoutes);
 app.use('/api/servers', serverRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Root Route
 app.get('/', (req, res) => {
   res.json({
-    message: 'Salz&Sand Backend API',
+    message: 'Salz und Sand Backend API',
     version: '1.0.0',
     endpoints: {
       health: '/health',

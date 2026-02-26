@@ -32,8 +32,8 @@ const registerLimiter = rateLimit({
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 Minuten
 
-const checkAccountLockout = async (email: string): Promise<boolean> => {
-  const key = `lockout:${email}`;
+const checkAccountLockout = async (username: string): Promise<boolean> => {
+  const key = `lockout:${username}`;
   const lockoutUntil = (global as any)[key];
   if (lockoutUntil && Date.now() < lockoutUntil) {
     return true;
@@ -41,24 +41,23 @@ const checkAccountLockout = async (email: string): Promise<boolean> => {
   return false;
 };
 
-const recordFailedAttempt = async (email: string) => {
-  const key = `failed_attempts:${email}`;
+const recordFailedAttempt = async (username: string) => {
+  const key = `failed_attempts:${username}`;
   const attempts = ((global as any)[key] || 0) + 1;
   (global as any)[key] = attempts;
 
   if (attempts >= MAX_LOGIN_ATTEMPTS) {
-    const lockoutKey = `lockout:${email}`;
+    const lockoutKey = `lockout:${username}`;
     (global as any)[lockoutKey] = Date.now() + LOCKOUT_DURATION;
-    // Reset attempts nach Lockout
     setTimeout(() => {
       delete (global as any)[key];
     }, LOCKOUT_DURATION);
   }
 };
 
-const clearFailedAttempts = (email: string) => {
-  delete (global as any)[`failed_attempts:${email}`];
-  delete (global as any)[`lockout:${email}`];
+const clearFailedAttempts = (username: string) => {
+  delete (global as any)[`failed_attempts:${username}`];
+  delete (global as any)[`lockout:${username}`];
 };
 
 // Registrierung mit erweiterten Checks
@@ -101,6 +100,7 @@ router.post('/register', registerLimiter, async (req, res) => {
           id: true,
           username: true,
           email: true,
+          isAdmin: true,
           createdAt: true,
         }
       });
@@ -141,34 +141,33 @@ router.post('/register', registerLimiter, async (req, res) => {
 router.post('/login', loginLimiter, async (req, res) => {
   try {
     const validated = loginSchema.parse(req.body);
-    const { email, password, serverId } = validated;
+    const { username, password, serverId } = validated;
 
     // Prüfe Account Lockout
-    if (await checkAccountLockout(email)) {
+    if (await checkAccountLockout(username)) {
       return res.status(429).json({
         error: 'Account temporär gesperrt. Bitte in 15 Minuten erneut versuchen.'
       });
     }
 
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { username },
     });
 
     if (!user) {
-      await recordFailedAttempt(email);
-      // Gleiche Antwort für Sicherheit (keine User-Enumeration)
+      await recordFailedAttempt(username);
       return res.status(401).json({ error: 'Ungültige Anmeldedaten' });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      await recordFailedAttempt(email);
+      await recordFailedAttempt(username);
       return res.status(401).json({ error: 'Ungültige Anmeldedaten' });
     }
 
     // Erfolgreicher Login - Reset Failed Attempts
-    clearFailedAttempts(email);
+    clearFailedAttempts(username);
 
     // Wenn Server-ID angegeben, prüfe ob Server existiert, aktiv ist und Startzeit erreicht wurde
     let selectedServer = null;

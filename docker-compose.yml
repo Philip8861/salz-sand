@@ -1,0 +1,19 @@
+# PostgreSQL für lokale Entwicklung
+# Start: docker compose up -d
+# Stop:  docker compose down
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: salzsand-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: salzsand
+    ports:
+      - "5432:5432"
+    volumes:
+      - salzsand_pgdata:/var/lib/postgresql/data
+
+volumes:
+  salzsand_pgdata:
