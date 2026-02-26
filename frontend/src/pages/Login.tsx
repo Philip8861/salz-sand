@@ -20,7 +20,7 @@ const Login = () => {
   const [servers, setServers] = useState<Server[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [loadingServers, setLoadingServers] = useState(true);
+  const [, setLoadingServers] = useState(true);
   const [showGrid, setShowGrid] = useState(false);
   const [mousePosition, setMousePosition] = useState<{ x: number; y: number } | null>(null);
   const [showFormFields, setShowFormFields] = useState(false);
