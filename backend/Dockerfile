@@ -1,40 +1,36 @@
-# Multi-stage build für optimale Image-Größe
-FROM node:18-alpine AS builder
+# Debian-basiert (nicht Alpine), damit Prisma-Engine mit OpenSSL 3 läuft (Railway/libssl.so.1.1-Fix)
+FROM node:20-slim AS builder
 
 WORKDIR /app
 
-# Kopiere package files
+# OpenSSL für Prisma Query Engine (Debian slim hat es, explizit sicherstellen)
+RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Installiere Dependencies
 RUN npm ci
 
-# Kopiere Source Code
 COPY . .
 
-# Generiere Prisma Client und baue TypeScript
-RUN npm run prisma:generate
+RUN npx prisma generate
 RUN npm run build
 
-# Production Stage
-FROM node:18-alpine AS production
+# Production Stage (gleiche Basis = gleiches Prisma-Binary)
+FROM node:20-slim AS production
 
 WORKDIR /app
 
-# Kopiere package files
+RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
 COPY prisma ./prisma/
 
-# Installiere nur Production Dependencies
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
-# Kopiere gebaute Dateien vom Builder
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
-# Exponiere Port
 EXPOSE 3000
 
-# Start Command
 CMD ["npm", "start"]
